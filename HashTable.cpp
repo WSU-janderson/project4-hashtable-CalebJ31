@@ -33,24 +33,31 @@ HashTable::HashTable(size_t initCapacity) {
     tableData.resize(initCapacity);  // Create initCapacity empty buckets
 }
 
-// Prints a single bucket in format: <key, value>
+// Helper method to create a string representation of the table
+// This IS a member method, so it CAN access private data
+std::string HashTable::printMe() const {
+    std::string result = "";
+
+    // Loop through all buckets
+    for (size_t i = 0; i < tableData.size(); i++) {
+        // Only print buckets that have data
+        if (tableData[i].isNormal()) {
+            result += "Bucket " + std::to_string(i) + ": <" +
+                      tableData[i].getKey() + ", " +
+                      std::to_string(tableData[i].getValue()) + ">\n";
+        }
+    }
+
+    return result;
+}
+
 std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket) {
-    // Print the bucket's key value pair
-    os << "<" << bucket.key << ", " << bucket.value << ">";
+    os << "<" << bucket.getKey() << ", " << bucket.getValue() << ">";
     return os;
 }
 
-// Prints the entire hash table
-// Only prints buckets that are NORMAL
-// Format: Bucket [index]: <key, value>
 std::ostream& operator<<(std::ostream& os, const HashTable& hashTable) {
-    // Loop through all buckets in the table
-    for (size_t i = 0; i < hashTable.tableData.size(); i++) {
-        // Only print buckets that have data
-        if (hashTable.tableData[i].isNormal()) {
-            os << "Bucket " << i << ": " << hashTable.tableData[i] << "\n";
-        }
-    }
+    os << hashTable.printMe();
     return os;
 }
 

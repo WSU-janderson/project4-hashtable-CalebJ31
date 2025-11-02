@@ -56,7 +56,11 @@ public:
     size_t capacity() const;
     size_t size() const;
 
-    friend std::ostream& operator<<(std::ostream& os, const HashTable& hashTable);
+    std::string printMe() const;
+
 
 };
+std::ostream& operator<<(std::ostream& os, const HashTable& hashTable);
+std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket);
+
 #endif
