@@ -10,25 +10,28 @@
 #include <optional>
 #include <iostream>
 
-// Add this enum first
 enum class BucketType {
-    NORMAL,  // Has a key-value pair
+    NORMAL,  // Has a key value pair
     ESS,     // Empty Since Start
     EAR      // Empty After Remove
 };
 
-// Add this class before HashTable
+// HashTableBucket stores a single key value pair
+// Each bucket also tracks its state (NORMAL, ESS, or EAR)
 class HashTableBucket {
 private:
-    std::string key;
-    size_t value;
-    BucketType type;
+    std::string key;      // The key for this bucket
+    size_t value;         // The value associated with the key
+    BucketType type;      // Current state of the bucket
 
 public:
+    // Constructor
     HashTableBucket();
-    std::string getKey() const;
-    size_t getValue() const;
-    bool isNormal() const;
+
+    // Getter methods
+    std::string getKey() const;   // Returns the key stored in this bucket
+    size_t getValue() const;       // Returns the value stored in this bucket
+    bool isNormal() const;         // Returns true if bucket has valid data
 };
 
 
