@@ -10,7 +10,32 @@
 #include <optional>
 #include <iostream>
 
+// Add this enum first
+enum class BucketType {
+    NORMAL,  // Has a key-value pair
+    ESS,     // Empty Since Start
+    EAR      // Empty After Remove
+};
+
+// Add this class before HashTable
+class HashTableBucket {
+private:
+    std::string key;
+    size_t value;
+    BucketType type;
+
+public:
+    HashTableBucket();
+    std::string getKey() const;
+    size_t getValue() const;
+    bool isNormal() const;
+};
+
+
 class HashTable {
+private:
+    std::vector<HashTableBucket> tableData;
+
 
 public:
     HashTable(size_t initCapacity = 8);
