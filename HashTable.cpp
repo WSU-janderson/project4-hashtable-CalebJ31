@@ -26,7 +26,54 @@ size_t HashTableBucket::getValue() const {
 bool HashTableBucket::isNormal() const {
     return type == BucketType::NORMAL;
 }
+// Parameterized constructor creates a bucket with data in NORMAL state
+HashTableBucket::HashTableBucket(std::string key, size_t value) {
+    this->key = key;
+    this->value = value;
+    this->type = BucketType::NORMAL;
+}
 
+// Load a key value pair into the bucket and mark as NORMAL
+void HashTableBucket::load(std::string key, size_t value) {
+    this->key = key;
+    this->value = value;
+    this->type = BucketType::NORMAL;
+}
+
+// Returns a reference to the value
+size_t& HashTableBucket::getValueRef() {
+    return value;
+}
+
+// Checks if bucket is empty. ESS or EAR
+bool HashTableBucket::isEmpty() const {
+    return type == BucketType::ESS || type == BucketType::EAR;
+}
+
+// Checks if bucket has never been used
+bool HashTableBucket::isEmptySinceStart() const {
+    return type == BucketType::ESS;
+}
+
+// Checks if bucket had data that was removed
+bool HashTableBucket::isEmptyAfterRemove() const {
+    return type == BucketType::EAR;
+}
+
+// Sets bucket state to NORMAL
+void HashTableBucket::makeNormal() {
+    type = BucketType::NORMAL;
+}
+
+// Sets bucket state to ESS
+void HashTableBucket::makeESS() {
+    type = BucketType::ESS;
+}
+
+// Sets bucket state to EAR
+void HashTableBucket::makeEAR() {
+    type = BucketType::EAR;
+}
 // Constructor, initializes the hash table with a given capacity
 // Creates a vector of empty buckets
 HashTable::HashTable(size_t initCapacity) {

@@ -27,11 +27,28 @@ private:
 public:
     // Constructor
     HashTableBucket();
+    HashTableBucket(std::string key, size_t value);
+
+    //Load method
+    void load(std::string key, size_t value);
+
+
 
     // Getter methods
     std::string getKey() const;   // Returns the key stored in this bucket
     size_t getValue() const;       // Returns the value stored in this bucket
-    bool isNormal() const;         // Returns true if bucket has valid data
+    size_t& getValueRef();
+
+    // State checking methods
+    bool isNormal() const;
+    bool isEmpty() const;
+    bool isEmptySinceStart() const;
+    bool isEmptyAfterRemove() const;
+
+ // State changing methods
+    void makeNormal();
+    void makeESS();
+    void makeEAR();
 
 
     friend std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket);
@@ -42,7 +59,7 @@ public:
 class HashTable {
 private:
     std::vector<HashTableBucket> tableData;
-
+    size_t numElements;
 
 public:
     HashTable(size_t initCapacity = 8);
