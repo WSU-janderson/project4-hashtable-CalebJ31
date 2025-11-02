@@ -32,6 +32,10 @@ public:
     std::string getKey() const;   // Returns the key stored in this bucket
     size_t getValue() const;       // Returns the value stored in this bucket
     bool isNormal() const;         // Returns true if bucket has valid data
+
+
+    friend std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket);
+
 };
 
 
@@ -51,5 +55,8 @@ public:
     double alpha() const;
     size_t capacity() const;
     size_t size() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const HashTable& hashTable);
+
 };
 #endif

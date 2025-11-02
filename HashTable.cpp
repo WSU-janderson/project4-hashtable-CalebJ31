@@ -33,6 +33,26 @@ HashTable::HashTable(size_t initCapacity) {
     tableData.resize(initCapacity);  // Create initCapacity empty buckets
 }
 
+// Prints a single bucket in format: <key, value>
+std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket) {
+    // Print the bucket's key value pair
+    os << "<" << bucket.key << ", " << bucket.value << ">";
+    return os;
+}
+
+// Prints the entire hash table
+// Only prints buckets that are NORMAL
+// Format: Bucket [index]: <key, value>
+std::ostream& operator<<(std::ostream& os, const HashTable& hashTable) {
+    // Loop through all buckets in the table
+    for (size_t i = 0; i < hashTable.tableData.size(); i++) {
+        // Only print buckets that have data
+        if (hashTable.tableData[i].isNormal()) {
+            os << "Bucket " << i << ": " << hashTable.tableData[i] << "\n";
+        }
+    }
+    return os;
+}
 
 bool HashTable::insert(std::string key, size_t value){};
 bool HashTable::remove(std::string key){};
