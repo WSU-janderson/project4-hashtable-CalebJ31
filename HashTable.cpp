@@ -115,8 +115,15 @@ bool HashTable::contains(const string& key) const{};
 std::optional<size_t> HashTable::get(const string& key) const{};
 size_t& HashTable::operator[](const string& key){};
 std::vector<string> HashTable::keys() const{};
-double HashTable::alpha() const{};
-size_t HashTable::capacity() const{};
+// Will return the load factor. Basically size/capaccity
+double HashTable::alpha() const {
+    return static_cast<double>(numElements)/ static_cast<double>(tableData.size());
+};
+//returns the number of buckets in the table
+size_t HashTable::capacity() const {
+    return tableData.size();
+};
+//Returns the number of key value pairs
 size_t HashTable::size() const {
     return numElements;
 };
