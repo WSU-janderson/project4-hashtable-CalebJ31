@@ -78,6 +78,7 @@ void HashTableBucket::makeEAR() {
 // Creates a vector of empty buckets
 HashTable::HashTable(size_t initCapacity) {
     tableData.resize(initCapacity);  // Create initCapacity empty buckets
+    numElements = 0;
 }
 
 // Helper method to create a string representation of the table
@@ -116,7 +117,9 @@ size_t& HashTable::operator[](const string& key){};
 std::vector<string> HashTable::keys() const{};
 double HashTable::alpha() const{};
 size_t HashTable::capacity() const{};
-size_t HashTable::size() const{};
+size_t HashTable::size() const {
+    return numElements;
+};
 
 
 
