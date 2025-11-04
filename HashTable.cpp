@@ -114,7 +114,22 @@ bool HashTable::remove(std::string key){};
 bool HashTable::contains(const string& key) const{};
 std::optional<size_t> HashTable::get(const string& key) const{};
 size_t& HashTable::operator[](const string& key){};
-std::vector<string> HashTable::keys() const{};
+
+
+// Creates a vector that stores keys
+// loop thru data, if it has data then add
+std::vector<string> HashTable::keys() const {
+    std::vector<string> result;
+    // Loop through all buckets in the table
+    for (size_t i = 0; i < tableData.size(); i++) {
+        // Only add keys from buckets that have data
+        if (tableData[i].isNormal()) {
+            result.push_back(tableData[i].getKey());
+        }
+    }
+
+    return result;
+};
 // Will return the load factor. Basically size/capaccity
 double HashTable::alpha() const {
     return static_cast<double>(numElements)/ static_cast<double>(tableData.size());
