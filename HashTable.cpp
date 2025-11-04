@@ -2,6 +2,9 @@
  * HashTable.cpp
  */
 #include "HashTable.h"
+#include <algorithm>
+#include <random>
+
 using namespace std;
 
 // Default constructor that creates an empty bucket in ESS state
@@ -107,6 +110,24 @@ std::ostream& operator<<(std::ostream& os, const HashTableBucket& bucket) {
 std::ostream& operator<<(std::ostream& os, const HashTable& hashTable) {
     os << hashTable.printMe();
     return os;
+}
+
+// Generates pseudo random probe offsets
+// Creates array of [1, 2, ... capacity-1] then shuffles it
+//https://en.cppreference.com/w/cpp/numeric/random.html
+void HashTable::generateOffsets(size_t capacity) {
+    offsets.clear();
+    offsets.resize(capacity - 1);
+
+    // Fill with capacity-1
+    for (size_t i = 0; i < capacity - 1; i++) {
+        offsets[i] = i + 1;
+    }
+
+    // Shuffle using C++ random
+    std::random_device rd;      //  random number generator
+    std::mt19937 g(rd());       // Mersenne Twister seeded
+    std::shuffle(offsets.begin(), offsets.end(), g);
 }
 
 bool HashTable::insert(std::string key, size_t value){};

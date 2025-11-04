@@ -60,6 +60,10 @@ class HashTable {
 private:
     std::vector<HashTableBucket> tableData;
     size_t numElements;
+    std::vector<size_t> offsets;
+
+    size_t hashFunction(const std::string& key) const;
+    void generateOffsets(size_t capacity);
 
 public:
     HashTable(size_t initCapacity = 8);
