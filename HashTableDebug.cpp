@@ -19,6 +19,9 @@ int main() {
     cout << "Size: " << ht.size() << endl;
     cout << ht.contains("Caleb") << endl;
 
+    auto result1 = ht.get("Caleb");
+    cout << result1.value() << endl;
+
 
     return 0;
 }

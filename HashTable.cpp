@@ -260,9 +260,18 @@ bool HashTable::contains(const string& key) const {
     return findBucket(key) != SIZE_MAX;
 
 };
-std::optional<size_t> HashTable::get(const string& key) const{};
-size_t& HashTable::operator[](const string& key){};
+// Gets the value associated with a key
+// Returns the value if found nullopt if not found
+std::optional<size_t> HashTable::get(const string& key) const {
+    size_t bucketIdx = findBucket(key);
 
+    if (bucketIdx == SIZE_MAX) {
+        return std::nullopt;  // Key not found
+    }
+    return tableData[bucketIdx].getValue();
+}
+
+size_t& HashTable::operator[](const string& key){};
 
 // Creates a vector that stores keys
 // loop thru data, if it has data then add
