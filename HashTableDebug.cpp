@@ -21,9 +21,10 @@ int main() {
 
     auto result1 = ht.get("Caleb");
     cout << result1.value() << endl;
-    ht.remove("Caleb");
     cout << "Size: " << ht.size() << endl;
-
+    cout << ht["Caleb"] << endl;
+    ht["Caleb"] = 67;
+    cout << ht["Caleb"] << endl;
 
     return 0;
 }

@@ -286,7 +286,14 @@ std::optional<size_t> HashTable::get(const string& key) const {
     return tableData[bucketIdx].getValue();
 }
 
-size_t& HashTable::operator[](const string& key){};
+
+// Undefined  if key not in table
+size_t& HashTable::operator[](const string& key) {
+    size_t bucketIdx = findBucket(key);
+
+    // If key not found, behavior is undefined
+    return tableData[bucketIdx].getValueRef();
+}
 
 // Creates a vector that stores keys
 // loop thru data, if it has data then add
