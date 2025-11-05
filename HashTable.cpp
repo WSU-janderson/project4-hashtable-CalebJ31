@@ -255,11 +255,26 @@ bool HashTable::insert(std::string key, size_t value) {
     return true;
 }
 
-bool HashTable::remove(std::string key){};
+// Removes pair from the table
+// Returns true if removed. false if not found
+bool HashTable::remove(std::string key) {
+    size_t bucketIdx = findBucket(key);
+
+    if (bucketIdx == SIZE_MAX) {
+        return false;  // Key not found
+    }
+
+    // mark bucket as EAR
+    tableData[bucketIdx].makeEAR();
+    numElements--;
+    return true;
+}
+
 bool HashTable::contains(const string& key) const {
     return findBucket(key) != SIZE_MAX;
 
 };
+
 // Gets the value associated with a key
 // Returns the value if found nullopt if not found
 std::optional<size_t> HashTable::get(const string& key) const {
