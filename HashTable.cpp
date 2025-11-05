@@ -196,6 +196,40 @@ void HashTable::resize() {
     }
 }
 
+// Find the bucket containing a key
+// Returns the bucket index if found, SIZE_MAX if not found
+size_t HashTable::findBucket(const std::string& key) const {
+    size_t home = hashFunction(key);
+    size_t cap = tableData.size();
+
+    // Check home position
+    if (tableData[home].isNormal() && tableData[home].getKey() == key) {
+        return home;
+    }
+
+    // If home is ESS, key is not in table
+    if (tableData[home].isEmptySinceStart()) {
+        return SIZE_MAX;  // Not found
+    }
+
+    // Probe using offsets
+    for (size_t i = 0; i < offsets.size(); i++) {
+        size_t probeIdx = (home + offsets[i]) % cap;
+
+        // Found the key
+        if (tableData[probeIdx].isNormal() && tableData[probeIdx].getKey() == key) {
+            return probeIdx;
+        }
+
+        // If we hit ESS, key is not in table
+        if (tableData[probeIdx].isEmptySinceStart()) {
+            return SIZE_MAX;
+        }
+    }
+
+    return SIZE_MAX;  // Not found after checking all positions
+}
+
 // Inserts a key value pair into the table
 // Returns true if successful, false if duplicate or value is 9999
 bool HashTable::insert(std::string key, size_t value) {
@@ -222,7 +256,10 @@ bool HashTable::insert(std::string key, size_t value) {
 }
 
 bool HashTable::remove(std::string key){};
-bool HashTable::contains(const string& key) const{};
+bool HashTable::contains(const string& key) const {
+    return findBucket(key) != SIZE_MAX;
+
+};
 std::optional<size_t> HashTable::get(const string& key) const{};
 size_t& HashTable::operator[](const string& key){};
 

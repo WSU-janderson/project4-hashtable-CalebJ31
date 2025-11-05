@@ -62,12 +62,17 @@ private:
     size_t numElements;
     std::vector<size_t> offsets;
 
+    //helpers
     size_t hashFunction(const std::string& key) const;
     void generateOffsets(size_t capacity);
     size_t findInsertBucket(const std::string& key);
     void resize();
+    size_t findBucket(const std::string& key) const;
+
 
 public:
+    static constexpr size_t DEFAULT_INITIAL_CAPACITY = 8;
+
     HashTable(size_t initCapacity = 8);
     bool insert(std::string key, size_t value);
     bool remove(std::string key);
