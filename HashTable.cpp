@@ -82,6 +82,7 @@ void HashTableBucket::makeEAR() {
 HashTable::HashTable(size_t initCapacity) {
     tableData.resize(initCapacity);  // Create initCapacity empty buckets
     numElements = 0;
+     generateOffsets(initCapacity);
 }
 
 // Helper method to create a string representation of the table
@@ -112,6 +113,18 @@ std::ostream& operator<<(std::ostream& os, const HashTable& hashTable) {
     return os;
 }
 
+// Hash function. computes home position for a key
+// Uses sum of ASCII values mod table size
+size_t HashTable::hashFunction(const std::string& key) const {
+    size_t hash = 0;
+    // Sum ASCII values of all characters
+    for (char c : key) {
+        hash += static_cast<size_t>(c);
+    }
+    // Mod by table size to get valid index
+    return hash % tableData.size();
+}
+
 // Generates pseudo random probe offsets
 // Creates array of [1, 2, ... capacity-1] then shuffles it
 //https://en.cppreference.com/w/cpp/numeric/random.html
@@ -130,7 +143,84 @@ void HashTable::generateOffsets(size_t capacity) {
     std::shuffle(offsets.begin(), offsets.end(), g);
 }
 
-bool HashTable::insert(std::string key, size_t value){};
+// Finds an empty bucket to insert a key, or returns SIZE_MAX if key exists
+size_t HashTable::findInsertBucket(const std::string& key) {
+    size_t home = hashFunction(key);
+    size_t cap = tableData.size();
+
+    // Check home position first
+    if (tableData[home].isNormal() && tableData[home].getKey() == key) {
+        return SIZE_MAX;  // Duplicate key
+    }
+    if (tableData[home].isEmpty()) {
+        return home;  // Home is empty, use it
+    }
+
+    // Probe using offsets
+    for (size_t i = 0; i < offsets.size(); i++) {
+        size_t probeIdx = (home + offsets[i]) % cap;
+
+        // Check for duplicate
+        if (tableData[probeIdx].isNormal() && tableData[probeIdx].getKey() == key) {
+            return SIZE_MAX;
+        }
+
+        // Found empty bucket
+        if (tableData[probeIdx].isEmpty()) {
+            return probeIdx;
+        }
+    }
+
+    return SIZE_MAX;  // if Table full
+}
+
+// Doubles the table size and rehashes all elements
+void HashTable::resize() {
+    // Save old data
+    std::vector<HashTableBucket> oldData = tableData;
+
+    // Double capacity and reset
+    size_t newCapacity = tableData.size() * 2;
+    tableData.clear();
+    tableData.resize(newCapacity);
+    numElements = 0;
+
+    // Generate new offsets for new capacity
+    generateOffsets(newCapacity);
+
+    // Reinsert all elements from old table
+    for (const auto& bucket : oldData) {
+        if (bucket.isNormal()) {
+            insert(bucket.getKey(), bucket.getValue());
+        }
+    }
+}
+
+// Inserts a key value pair into the table
+// Returns true if successful, false if duplicate or value is 9999
+bool HashTable::insert(std::string key, size_t value) {
+    // Check if value is reserved (9999 cannot be stored)
+    if (value == 9999) {
+        return false;
+    }
+
+    // Resize if load factor >= 0.5
+    if (alpha() >= 0.5) {
+        resize();
+    }
+    // Find bucket to insert into
+    size_t bucketIdx = findInsertBucket(key);
+
+    if (bucketIdx == SIZE_MAX) {
+        return false;  // Duplicate key or table full
+    }
+
+    // Insert the key value pair
+    tableData[bucketIdx].load(key, value);
+    numElements++;
+    return true;
+}
+
 bool HashTable::remove(std::string key){};
 bool HashTable::contains(const string& key) const{};
 std::optional<size_t> HashTable::get(const string& key) const{};

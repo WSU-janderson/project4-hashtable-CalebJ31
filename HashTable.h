@@ -64,6 +64,8 @@ private:
 
     size_t hashFunction(const std::string& key) const;
     void generateOffsets(size_t capacity);
+    size_t findInsertBucket(const std::string& key);
+    void resize();
 
 public:
     HashTable(size_t initCapacity = 8);
